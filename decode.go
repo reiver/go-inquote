@@ -21,7 +21,7 @@ var (
 //	var p []byte
 //	p = ...
 //	
-//	for {
+//	for 0 < len(p) {
 //		r, n, err := inquote.DecodeRune(p)
 //		if nil != err {
 //			if io.EOF == err {
