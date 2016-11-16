@@ -12,7 +12,29 @@ var (
 )
 
 
-// DecodeRune decodes a string-literal-encoding of a rune in `p`.
+// DecodeRune decodes a string-literal-encoding of a rune from the beginning of `p`.
+//
+// It returns the value of the return, and the number of bytes the rune occupied.
+//
+// So, for example, one code do decoding with code such as:
+//
+//	var p []byte
+//	p = ...
+//	
+//	for {
+//		r, n, err := inquote.DecodeRune(p)
+//		if nil != err {
+//			if io.EOF == err {
+//				break
+//			}
+//			return err
+//		}
+//		
+//		fmt.Printf("RUNE: %d\n", r)
+//		
+//		p = p[n:]
+//	}
+//
 func DecodeRune(p []byte) (rune, int, error) {
 
 	lenp := len(p)
