@@ -755,24 +755,48 @@ func TestDecodeRune(t *testing.T) {
 	}
 
 
+	ends := []string{
+		``,
+		` `,
+		`\a`,
+		`\b`,
+		`\t`,
+		`\n`,
+		`\v`,
+		`\f`,
+		`\r`,
+		`\x`,
+		`\u`,
+		`\U`,
+		`'`,
+		`"`,
+		`!@#$%^&*()`,
+		`apple`,
+		`banana`,
+		`cherry`,
+	}
+
+
 	for testNumber, test := range tests {
 
-		r, n, err := DecodeRune( []byte(test.String) )
-		if nil != err {
-			t.Errorf("For test #%d, did not expected an error, but actually got one: (%T) %v", testNumber, err, err)
-			continue
-		}
-		if expected, actual := test.ExpectedEncodedLength, n; expected != actual {
-			t.Errorf("For test #%d, expected the encoded length to be %d, but actually was %d. (String: %q)", testNumber, expected, actual, test.String)
-			continue
-		}
-		if expected, actual := test.Expected, r; expected != actual {
-			t.Errorf("For test #%d, expected %q, but actually got %q.", testNumber, string(expected), string(actual))
-			continue
-		}
+		for endingNumber, ending := range ends {
 
+			s := test.String + ending
 
-//@TODO: Concatenate stuff to end of string.
+			r, n, err := DecodeRune( []byte(s) )
+			if nil != err {
+				t.Errorf("For test #%d and ending #%d, did not expected an error, but actually got one: (%T) %v", testNumber, endingNumber, err, err)
+				continue
+			}
+			if expected, actual := test.ExpectedEncodedLength, n; expected != actual {
+				t.Errorf("For test #%d and ending #%d, expected the encoded length to be %d, but actually was %d. (String: %q)", testNumber, endingNumber, expected, actual, test.String)
+				continue
+			}
+			if expected, actual := test.Expected, r; expected != actual {
+				t.Errorf("For test #%d and ending #%d, expected %q, but actually got %q.", testNumber, endingNumber, string(expected), string(actual))
+				continue
+			}
+		}
 
 	}
 }
